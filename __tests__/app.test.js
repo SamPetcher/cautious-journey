@@ -16,11 +16,16 @@ describe.only('GET /api/topics', () => {
 			.expect(200)
 			.then( (topics) => {
 				expect(Array.isArray(topics.body)).toBe(true)
-				expect(topics.body[0]).toEqual({slug: 'mitch', description: 'The man, the Mitch, the legend'})
-			})
+				topics.body.forEach( (topics) => {
+					expect(topics).toEqual(expect.objectContaining({
+						slug: expect.any(String),
+						description: expect.any(String),
+					}))
+			})	
 			})
 	})
-
+})
+// We will assert with jest whether contains x y or Z
 describe('GET /api/articles', () => {
 	test('Should return a list of articles', () => {
 		return request(app).get('/api/articles')
