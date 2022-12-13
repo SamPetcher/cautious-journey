@@ -25,14 +25,3 @@ describe.only('GET /api/topics', () => {
 			})
 	})
 })
-// We will assert with jest whether contains x y or Z
-describe('GET /api/articles', () => {
-	test('Should return a list of articles', () => {
-		return request(app).get('/api/articles')
-			.expect(200)
-			.then( (reponse) => {
-				expect(Array.isArray(response.body)).toBe(true)
-				expect(Object.keys(response.body[0])).toEqual([`author`, `title`, `article_id`, `topic`, `created_at`, `votes`, `comment_count`])
-			})
-			})
-	})
