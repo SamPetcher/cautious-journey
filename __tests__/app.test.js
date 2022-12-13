@@ -15,7 +15,7 @@ describe.only('GET /api/topics', () => {
 		return request(app).get('/api/topics')
 			.expect(200)
 			.then( (topics) => {
-				expect(Array.isArray(topics.body)).toBe(true)
+				expect(topics.body.length).toBe(3)
 				topics.body.forEach( (topics) => {
 					expect(topics).toEqual(expect.objectContaining({
 						slug: expect.any(String),
