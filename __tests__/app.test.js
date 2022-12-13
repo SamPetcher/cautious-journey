@@ -14,10 +14,10 @@ describe.only('GET /api/topics', () => {
 	test('Should return a list of topics in the form of an array', () => {
 		return request(app).get('/api/topics')
 			.expect(200)
-			.then( (topics) => {
-				expect(topics.body.length).toBe(3)
-				topics.body.forEach( (topics) => {
-					expect(topics).toEqual(expect.objectContaining({
+			.then( (response) => {
+				expect(response.body.topics.length).toBe(3)
+				response.body.topics.forEach( (topic) => {
+					expect(topic).toEqual(expect.objectContaining({
 						slug: expect.any(String),
 						description: expect.any(String),
 					}))
