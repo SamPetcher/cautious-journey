@@ -82,3 +82,15 @@ describe('GET /api/articles/:article_id', () => {
 			})
 	})
 })
+
+describe.only('GET /api/articles/:article_id/comments', () => {
+	it('Should return an array containing the comments with the correct properties', () => {
+		return request(app)
+			.get('/api/articles/1/comments')
+			.expect(200)
+			.then( (response) => {
+				console.log(response.body, "test response")
+				expect(response.body).toBeInstanceOf(Array)
+			})
+	})
+})
