@@ -53,3 +53,39 @@ describe('GET /api/articles', () => {
 			})
 	})
 })
+
+describe('GET /api/articles/:article_id', () => {
+	it('Should return a specific article in response to a GET request at the parametric endpoint', () => {
+		return request(app)
+			.get('/api/articles/1')
+			.expect(200)
+			.then( (response) => {
+				expect(response.body).toEqual({
+        title: "Living in the shadow of a great man",
+        topic: "mitch",
+        author: "butter_bridge",
+        body: "I find this existence challenging",
+        created_at: '2020-07-09T20:11:00.000Z',
+        votes: 100,
+        article_id: 1
+      })
+			})
+	})
+	it('Should be able to status 404 when a valid request is put through that is not available', () => {
+		return request(app)
+			.get('/api/articles/2222')
+			.expect(404)
+			.then( (response) => {
+				expect(response.body.msg).toBe('No user found')
+			})
+	})
+		
+	it('Should be able to status 400 when a invalid request is put through',  () => {
+		return request(app)
+			.get('/api/articles/rawr')
+			.expect(400)
+			.then( (response) => {
+				expect(response.body.msg).toBe(`Doesn't exist`)
+			})
+	})
+})
