@@ -8,6 +8,10 @@ if (err.code === '22P02') {
 	} 
 	else if (err.code === '22003') {
 		res.status(400).send({ msg:  "Invalid URL exceeds viable number of articles" })
+	}
+
+	else if (err.code === '23503') {
+		res.status(404).send({ msg:  "Invalid article" })
 	} 
 	else {
 		console.log(err)

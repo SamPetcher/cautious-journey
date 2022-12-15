@@ -1,4 +1,4 @@
-const { selectTopics, selectArticles, selectArticle, selectArticleCommentsById } = require("../models/news.models")
+const { selectTopics, selectArticles, selectArticle, selectArticleCommentsById, insertArticleCommentById  } = require("../models/news.models")
 
 exports.getTopics = (req, res, next) => selectTopics().then((topics) => {
         res.status(200).send({ topics })
@@ -19,5 +19,12 @@ exports.getArticleCommentsById = ( req, res, next ) => {
 	.then( ([articles, comments]) => {
 		
 		res.status(200).send({ comments })
+	}).catch(next)
+}
+
+exports.postArticleCommentById = (req, res, next) => {
+	insertArticleCommentById(req.params.article_id, req.body)
+	.then( (dbResponse) => {
+		res.status(200).send(dbResponse)
 	}).catch(next)
 }

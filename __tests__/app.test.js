@@ -153,3 +153,56 @@ describe('GET /api/articles/:article_id/comments', () => {
 	})
 })
 
+describe('POST /api/articles/:article_id/comments', () => {
+	// This end-point will take an object with the username and body props and insert in to the database. It should respond with the posted comment...
+	it('Should successfully post a comment and return it to the user', () => {
+	const commentPost = {username: 'butter_bridge', body: 'the vomit was white with black spots and a lady on our street owns a dalmation',}
+		return request(app)
+		.post('/api/articles/1/comments')
+		.send(commentPost)
+		.expect(200)
+		.then( (comment) => {
+				expect(comment.body).toEqual(expect.objectContaining({
+        comment_id: expect.any(Number),
+        author: expect.any(String),
+        body: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+      }))
+
+		})
+	})
+	it('Should return an error when trying to post to a non existent article', () => {
+	const commentPost = {username: 'butter_bridge', body: 'the vomit was white with black spots and a lady on our street owns a dalmation',}
+		return request(app)
+		.post('/api/articles/44433/comments')
+		.send(commentPost)
+		.expect(404)
+		.then( (comment) => {
+			expect(comment.body.msg).toEqual("Invalid article")
+		})
+	})
+	it('Should return an error when trying to post to a non-existant sad path article', () => {
+	const commentPost = {username: 'butter_bridge', body: 'the vomit was white with black spots and a lady on our street owns a dalmation',}
+		return request(app)
+		.post('/api/articles/sausages/comments')
+		.send(commentPost)
+		.expect(400)
+		.then( (comment) => {
+			expect(comment.body.msg).toEqual("Doesn't exist")
+		})
+	})
+	it('Should return an error when trying to post a non existent user', () => {
+	const commentPost = {username: 'Ken M', body: 'the vomit was white with black spots and a lady on our street owns a dalmation',}
+		return request(app)
+		.post('/api/articles/1/comments')
+		.send(commentPost)
+		.expect(404)
+		.then( (comment) => {
+			expect(comment.body.msg).toEqual("Invalid article")
+		})
+	})
+
+})
+
+
