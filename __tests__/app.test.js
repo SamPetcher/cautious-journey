@@ -152,4 +152,43 @@ describe('GET /api/articles/:article_id/comments', () => {
 
 	})
 })
-
+describe.only('PATCH /api/articles/:article_id', () => {
+	it('Should be able to PATCH an article to change the value of its votes and respond with that article and the way it looks after', () => {
+		const patchObj = { inc_votes: 3}
+		return request(app)
+		.patch('/api/articles/1')
+		.send(patchObj)
+		.expect(200)
+		.then( (response) => {
+			expect(response.body.votes).toBe(103)
+		})
+	})
+	it('Should not allow the user to increment the votes of an article that isnt there', () => {
+		const patchObj = { inc_votes: 3}
+		return request(app)
+		.patch('/api/articles/4444333')
+		.send(patchObj)
+		.expect(404)
+		})
+	it('Should not allow the user to increment the votes of an article that isnt there (sad path edition)', () => {
+		const patchObj = { inc_votes: 3}
+		return request(app)
+		.patch('/api/articles/SELECT*FROM')
+		.send(patchObj)
+		.expect(400)
+		})
+	it('Should not allow the user to increment the votes if the votes are the wrong type of data', () => {
+		const patchObj = { inc_votes: 'chickens'}
+		return request(app)
+		.patch('/api/articles/1')
+		.send(patchObj)
+		.expect(400)
+		})
+	it('Shouldn\'t allow the user to patch a malformed object', () => {
+		const patchObj = { inc_votes: 'SELECT * FROM'}
+		return request(app)
+		.patch('/api/articles/1')
+		.send(patchObj)
+		.expect(400)
+		})
+})

@@ -25,3 +25,16 @@ exports.selectArticleCommentsById = (article_id) => {
 		return comments.rows
 	})
 }
+
+exports.updateArticleVotes = (article_id, body) => {
+	const values = [article_id, body]
+	const pSelectArticle = this.selectArticle(article_id)
+	const pUpdate = db.query('UPDATE articles SET votes = votes + $2 WHERE article_id = $1 RETURNING *;', values)
+	return Promise.all([pSelectArticle, pUpdate])
+	.then( ([article, update]) => {
+		return update.rows[0];
+	})
+}
+
+
+
