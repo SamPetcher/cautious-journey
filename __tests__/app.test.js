@@ -4,6 +4,7 @@ const testData = require('../db/data/test-data/index.js');
 const seed = require('../db/seeds/seed.js');
 const pool = require('../db/connection.js');
 const { response } = require('../app');
+const jSorted = require('jest-sorted')
 
 
 afterAll(() => pool.end());
@@ -39,9 +40,16 @@ describe('GET /api/articles', () => {
 						topic: expect.any(String),
 						created_at: expect.any(String),
 						votes: expect.any(Number), 
-						comment_count: expect.any(String),
+						comment_count: expect.any(Number),
 					}))
 			})
+			})
+	})
+	test('Should return a list of articles in order of creation date', () => {
+		return request(app).get('/api/articles')
+			.expect(200)
+			.then( (response) => {
+				expect(response.body.articles).toBeSortedBy('created_at', { descending: true})
 			})
 	})
 })
