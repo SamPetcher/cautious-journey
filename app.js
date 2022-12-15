@@ -1,5 +1,5 @@
 const express = require('express');
-const { getTopics, getArticles, getArticle, getArticleCommentsById, patchArticleVotes  } = require('./controllers/news.controllers');
+const { getTopics, getArticles, getUsers, getArticle, getArticleCommentsById, patchArticleVotes  } = require('./controllers/news.controllers');
 
 const { handleErrors } = require('./controllers/errors.controllers.js')
 const app = express();
@@ -9,7 +9,7 @@ app.get('/api/topics', getTopics)
 app.get('/api/articles', getArticles)
 app.get('/api/articles/:article_id', getArticle)
 app.get('/api/articles/:article_id/comments', getArticleCommentsById)
-
+app.get('/api/users', getUsers)
 app.patch('/api/articles/:article_id', patchArticleVotes);
 //app.use((err, req, res, next) => {
 //  if (err.status && err.msg) res.status(err.status).send({msg: err.msg})

@@ -152,7 +152,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 
 	})
 })
-describe.only('PATCH /api/articles/:article_id', () => {
+describe('PATCH /api/articles/:article_id', () => {
 	it('Should be able to PATCH an article to change the value of its votes and respond with that article and the way it looks after', () => {
 		const patchObj = { inc_votes: 3}
 		return request(app)
@@ -191,4 +191,23 @@ describe.only('PATCH /api/articles/:article_id', () => {
 		.send(patchObj)
 		.expect(400)
 		})
+})
+
+describe.only('GET /api/users', () => {
+	it('Should respond to end point with an array of user objects', () => {
+		return request(app)
+		.get('/api/users')
+		.expect(200)
+		.then( (reponse) => {
+			expect(reponse.body).toBeInstanceOf(Array)
+			reponse.body.forEach( (user) => {
+				expect(user).toEqual( expect.objectContaining({
+					username: expect.any(String),
+					name: expect.any(String),
+					avatar_url: expect.any(String),
+				}))
+			})
+		})
+
+	})
 })
