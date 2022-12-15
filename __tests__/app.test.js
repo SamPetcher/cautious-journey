@@ -5,7 +5,7 @@ const seed = require('../db/seeds/seed.js');
 const pool = require('../db/connection.js');
 const { response } = require('../app');
 const articles = require('../db/data/development-data/articles');
-
+const jSorted = require('jest-sorted');
 
 afterAll(() => pool.end());
 beforeEach(() => seed(testData));
@@ -69,7 +69,7 @@ describe('GET /api/articles/:article_id', () => {
 			.get('/api/articles/2222')
 			.expect(404)
 			.then( (response) => {
-				expect(response.body.msg).toBe('No user found')
+				expect(response.body.msg).toBe('No file found')
 			})
 	})
 		
@@ -83,14 +83,57 @@ describe('GET /api/articles/:article_id', () => {
 	})
 })
 
-describe.only('GET /api/articles/:article_id/comments', () => {
+describe('GET /api/articles/:article_id/comments', () => {
 	it('Should return an array containing the comments with the correct properties', () => {
 		return request(app)
 			.get('/api/articles/1/comments')
 			.expect(200)
 			.then( (response) => {
-				console.log(response.body, "test response")
-				expect(response.body).toBeInstanceOf(Array)
+				expect(response.body[1]).toEqual(expect.objectContaining({
+        comment_id: expect.any(Number),
+        author: expect.any(String),
+        body: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+      }))
 			})
 	})
+	it('Should return the comments in the correct (newest first) order', () => {
+		return request(app)
+		.get('/api/articles/1/comments')
+		.expect(200)
+		.then( (response) => {
+			expect(response.body).toBeSortedBy('created_at', {descending: true})
+		})
+	})
+	
+	test('Should return a 404 when the ID is a valid ID but does not exist in the database', () => {
+		return request(app)
+		.get('/api/articles/3211/comments')
+		.expect(404)
+		.then( (response) => {
+			expect(response.body.msg).toBe(`No file found`)
+		})
+
+	})
+
+	test('Should return a 400 when the ID is unrealistic', () => {
+		return request(app)
+		.get('/api/articles/3342342432211/comments')
+		.expect(400)
+		.then( (response) => {
+			expect(response.body.msg).toBe(`Invalid URL exceeds viable number of articles`)
+		})
+
+	})
+	test('Should return a 400 when the ID is just plain malevonent', () => {
+		return request(app)
+		.get('/api/articles/SELECT*/comments')
+		.expect(400)
+		.then( (response) => {
+			expect(response.body.msg).toBe(`Doesn't exist`)
+		})
+
+	})
 })
+
