@@ -13,6 +13,11 @@ exports.getArticle = (req, res, next) => {
 	.then( (resArticle) => {res.status(200).send(resArticle)}).catch(next)
 }
 exports.getArticleCommentsById = ( req, res, next ) => {
-	selectArticleCommentsById(req.params.article_id)
-	.then( (comments) => {res.status(200).send(comments)}).catch(next)
+	const pArticle = selectArticle(req.params.article_id)
+	const pComments = selectArticleCommentsById(req.params.article_id)
+	Promise.all([pArticle, pComments])
+	.then( ([articles, comments]) => {
+		
+		res.status(200).send({ comments })
+	}).catch(next)
 }

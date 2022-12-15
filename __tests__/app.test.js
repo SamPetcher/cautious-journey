@@ -89,7 +89,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 			.get('/api/articles/1/comments')
 			.expect(200)
 			.then( (response) => {
-				expect(response.body[1]).toEqual(expect.objectContaining({
+				expect(response.body.comments[1]).toEqual(expect.objectContaining({
         comment_id: expect.any(Number),
         author: expect.any(String),
         body: expect.any(String),
@@ -103,7 +103,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 		.get('/api/articles/1/comments')
 		.expect(200)
 		.then( (response) => {
-			expect(response.body).toBeSortedBy('created_at', {descending: true})
+			expect(response.body.comments).toBeSortedBy('created_at', {descending: true})
 		})
 	})
 	
@@ -132,6 +132,15 @@ describe('GET /api/articles/:article_id/comments', () => {
 		.expect(400)
 		.then( (response) => {
 			expect(response.body.msg).toBe(`Doesn't exist`)
+		})
+
+	})
+	test('Should return a 400 when the ID is just plain malevonent', () => {
+		return request(app)
+		.get('/api/articles/4/comments')
+		.expect(200)
+		.then( (response) => {
+			expect(response.body.comments.length).toBe(0)
 		})
 
 	})
