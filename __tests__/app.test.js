@@ -4,13 +4,14 @@ const testData = require('../db/data/test-data/index.js');
 const seed = require('../db/seeds/seed.js');
 const pool = require('../db/connection.js');
 const { response } = require('../app');
+const jSorted = require('jest-sorted')
 
 
 afterAll(() => pool.end());
 beforeEach(() => seed(testData));
 
 
-describe.only('GET /api/topics', () => {
+describe('GET /api/topics', () => {
 	test('Should return a list of topics in the form of an array', () => {
 		return request(app).get('/api/topics')
 			.expect(200)
@@ -22,6 +23,33 @@ describe.only('GET /api/topics', () => {
 						description: expect.any(String),
 					}))
 			})	
+			})
+	})
+})
+describe('GET /api/articles', () => {
+	test('Should return a list of articles', () => {
+		return request(app).get('/api/articles')
+			.expect(200)
+			.then( (response) => {
+				expect(response.body.articles.length).toBe(12)	
+				response.body.articles.forEach( (article) => {
+					expect(article).toEqual(expect.objectContaining({
+						author: expect.any(String),
+						title: expect.any(String),
+						article_id: expect.any(Number),
+						topic: expect.any(String),
+						created_at: expect.any(String),
+						votes: expect.any(Number), 
+						comment_count: expect.any(Number),
+					}))
+			})
+			})
+	})
+	test('Should return a list of articles in order of creation date', () => {
+		return request(app).get('/api/articles')
+			.expect(200)
+			.then( (response) => {
+				expect(response.body.articles).toBeSortedBy('created_at', { descending: true})
 			})
 	})
 })
