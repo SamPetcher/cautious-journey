@@ -209,6 +209,7 @@ describe('GET /api/users', () => {
 				}))
 			})
 		})
+	})
 
 describe('POST /api/articles/:article_id/comments', () => {
 	// This end-point will take an object with the username and body props and insert in to the database. It should respond with the posted comment...
@@ -290,4 +291,4 @@ describe('POST /api/articles/:article_id/comments', () => {
 })
 
 	})
-})
+
