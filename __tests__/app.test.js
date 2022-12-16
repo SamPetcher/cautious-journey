@@ -220,7 +220,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 
 		})
 })
-	it('Should 404 when the user doesnt provide the correct field...', () => {
+	it('Should 400 when the user doesnt provide the correct field...', () => {
 	const commentPost = {username: 'butter_bridge', }
 		return request(app)
 		.post('/api/articles/sausages/comments')
