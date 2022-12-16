@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const { selectTopics, selectArticles, selectUsers, selectArticle, selectArticleCommentsById, updateArticleVotes } = require("../models/news.models")
-=======
-const { selectTopics, selectArticles, selectArticle, selectArticleCommentsById, insertArticleCommentById  } = require("../models/news.models")
->>>>>>> main
+const { selectTopics, selectArticles, selectUsers, selectArticle, selectArticleCommentsById, updateArticleVotes, insertArticleCommentById } = require("../models/news.models")
 
 exports.getTopics = (req, res, next) => selectTopics().then((topics) => {
         res.status(200).send({ topics })
@@ -25,7 +21,6 @@ exports.getArticleCommentsById = ( req, res, next ) => {
 		res.status(200).send({ comments })
 	}).catch(next)
 }
-<<<<<<< HEAD
 exports.patchArticleVotes = ( req, res, next ) => {
 	updateArticleVotes(req.params.article_id, req.body.inc_votes)
 	.then( (dbResponse) => {
@@ -40,8 +35,6 @@ exports.getUsers = ( req, res, next ) => {
 		res.status(200).send(dbResponse)
 	})
 } 
-=======
-
 exports.postArticleCommentById = (req, res, next) => {
 	insertArticleCommentById(req.params.article_id, req.body)
 	.then( (dbResponse) => {
@@ -49,4 +42,3 @@ exports.postArticleCommentById = (req, res, next) => {
 		res.status(201).send(comment)
 	}).catch(next)
 }
->>>>>>> main

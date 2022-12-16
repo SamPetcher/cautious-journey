@@ -26,7 +26,6 @@ exports.selectArticleCommentsById = (article_id) => {
 	})
 }
 
-<<<<<<< HEAD
 exports.updateArticleVotes = (article_id, body) => {
 	const values = [article_id, body]
 	const pSelectArticle = this.selectArticle(article_id)
@@ -42,7 +41,6 @@ exports.selectUsers =() => {
 }
 
 
-=======
 exports.insertArticleCommentById = (article_id, postedComment) => {
 	const insertValues = [postedComment.body, postedComment.username, article_id]
 	return db.query('INSERT INTO comments (body, author, article_id) VALUES($1, $2, $3) RETURNING *;', insertValues)
@@ -50,4 +48,3 @@ exports.insertArticleCommentById = (article_id, postedComment) => {
 		return rows[0];
 	})
 }
->>>>>>> main
