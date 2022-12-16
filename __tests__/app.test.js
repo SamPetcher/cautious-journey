@@ -193,14 +193,15 @@ describe('PATCH /api/articles/:article_id', () => {
 		})
 })
 
-describe.only('GET /api/users', () => {
+describe('GET /api/users', () => {
 	it('Should respond to end point with an array of user objects', () => {
 		return request(app)
 		.get('/api/users')
 		.expect(200)
-		.then( (reponse) => {
-			expect(reponse.body).toBeInstanceOf(Array)
-			reponse.body.forEach( (user) => {
+		.then( (response) => {
+			expect(response.body.length).toBe(4)
+			expect(response.body).toBeInstanceOf(Array)
+			response.body.forEach( (user) => {
 				expect(user).toEqual( expect.objectContaining({
 					username: expect.any(String),
 					name: expect.any(String),
