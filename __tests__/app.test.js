@@ -160,7 +160,18 @@ describe('PATCH /api/articles/:article_id', () => {
 		.send(patchObj)
 		.expect(200)
 		.then( (response) => {
-			expect(response.body.votes).toBe(103)
+			expect(response.body.article.votes).toBe(103)
+			expect(response.body.article).toEqual(expect.objectContaining(
+				{
+					article_id: expect.any(Number),
+					title: expect.any(String),
+					author: expect.any(String),
+					body: expect.any(String),
+					created_at: expect.any(String),
+					votes: expect.any(Number),
+				}
+			))
+
 		})
 	})
 	it('Should not allow the user to increment the votes of an article that isnt there', () => {
@@ -186,6 +197,14 @@ describe('PATCH /api/articles/:article_id', () => {
 		})
 	it('Shouldn\'t allow the user to patch a malformed object', () => {
 		const patchObj = { inc_votes: 'SELECT * FROM'}
+		return request(app)
+		.patch('/api/articles/1')
+		.send(patchObj)
+		.expect(400)
+		})
+
+	it('Shouldn\'t allow the user to patch a malformed object', () => {
+		const patchObj = null; 
 		return request(app)
 		.patch('/api/articles/1')
 		.send(patchObj)
