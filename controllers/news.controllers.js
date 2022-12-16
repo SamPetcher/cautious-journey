@@ -24,6 +24,6 @@ exports.getArticleCommentsById = ( req, res, next ) => {
 exports.patchArticleVotes = ( req, res, next ) => {
 	updateArticleVotes(req.params.article_id, req.body.inc_votes)
 	.then( (dbResponse) => {
-		res.status(200).send(dbResponse)
+		res.status(200).send({article: dbResponse})
 	}).catch(next)
 }
