@@ -25,6 +25,7 @@ exports.getArticleCommentsById = ( req, res, next ) => {
 exports.postArticleCommentById = (req, res, next) => {
 	insertArticleCommentById(req.params.article_id, req.body)
 	.then( (dbResponse) => {
-		res.status(200).send(dbResponse)
+		const comment = {comment: dbResponse}
+		res.status(201).send(comment)
 	}).catch(next)
 }

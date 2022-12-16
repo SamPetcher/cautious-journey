@@ -129,7 +129,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 		.get('/api/articles/3342342432211/comments')
 		.expect(400)
 		.then( (response) => {
-			expect(response.body.msg).toBe(`Invalid URL exceeds viable number of articles`)
+			expect(response.body.msg).toBe(`Invalid request. Cannot respond to this request please try again.`)
 		})
 
 	})
@@ -160,9 +160,9 @@ describe('POST /api/articles/:article_id/comments', () => {
 		return request(app)
 		.post('/api/articles/1/comments')
 		.send(commentPost)
-		.expect(200)
+		.expect(201)
 		.then( (comment) => {
-				expect(comment.body).toEqual(expect.objectContaining({
+				expect(comment.body.comment).toEqual(expect.objectContaining({
         comment_id: expect.any(Number),
         author: expect.any(String),
         body: expect.any(String),
@@ -179,7 +179,7 @@ describe('POST /api/articles/:article_id/comments', () => {
 		.send(commentPost)
 		.expect(404)
 		.then( (comment) => {
-			expect(comment.body.msg).toEqual("Invalid article")
+			expect(comment.body.msg).toEqual("Invalid selection please try again.")
 		})
 	})
 	it('Should return an error when trying to post to a non-existant sad path article', () => {
@@ -199,10 +199,36 @@ describe('POST /api/articles/:article_id/comments', () => {
 		.send(commentPost)
 		.expect(404)
 		.then( (comment) => {
-			expect(comment.body.msg).toEqual("Invalid article")
+			expect(comment.body.msg).toEqual("Invalid selection please try again.")
 		})
 	})
 
-})
+	it('Should successfully post a comment and return it to the user even if they include extra props...', () => {
+	const commentPost = {username: 'butter_bridge', body: 'the vomit was white with black spots and a lady on our street owns a dalmation', request: 'Eat my shorts',}
+		return request(app)
+		.post('/api/articles/1/comments')
+		.send(commentPost)
+		.expect(201)
+		.then( (comment) => {
+				expect(comment.body.comment).toEqual(expect.objectContaining({
+        comment_id: expect.any(Number),
+        author: expect.any(String),
+        body: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+      }))
 
+		})
+})
+	it('Should 404 when the user doesnt provide the correct field...', () => {
+	const commentPost = {username: 'butter_bridge', }
+		return request(app)
+		.post('/api/articles/sausages/comments')
+		.send(commentPost)
+		.expect(400)
+		.then( (comment) => {
+			expect(comment.body.msg).toEqual("Doesn't exist")
+		})
+	})
+})
 
