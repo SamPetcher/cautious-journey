@@ -26,7 +26,7 @@ describe('GET /api/topics', () => {
 			})
 	})
 })
-describe('GET /api/articles', () => {
+describe.only('GET /api/articles', () => {
 	test('Should return a list of articles', () => {
 		return request(app).get('/api/articles')
 			.expect(200)
@@ -52,7 +52,50 @@ describe('GET /api/articles', () => {
 				expect(response.body.articles).toBeSortedBy('created_at', { descending: true})
 			})
 	})
+	it('Should be able to respond to a topic filter and only respond with topics that are the same as the query', () => {
+	return request(app)
+	.get('/api/articles?topic=mitch')
+	.expect(200)
+	})
+
+	it('Should be able to filter by topics', () => {
+	return request(app)
+	.get('/api/articles?topic=cats')
+	.expect(200)
+	.then( (response) => {
+		expect(response.body.articles).toBeInstanceOf(Array)
+		expect(response.body.articles.length).toBe(1)
+	})
+	})
+	it('Should be able to filter by topics in ascending order', () => {
+	return request(app)
+	.get('/api/articles?sort_by=author')
+	.expect(200)
+	.then( (response) => {
+		console.log(response.body.articles)
+		expect(response.body.articles).toBeInstanceOf(Array)
+		expect(response.body.articles.length).toBe(12)
+		expect(response.body.articles).toBeSortedBy('author', { descending: true})
+	})
+	})
+	it('Should be able to filter by topics in ascending order', () => {
+	return request(app)
+	.get('/api/articles?sort_by=author&order=ASC')
+	.expect(200)
+	.then( (response) => {
+		console.log(response.body.articles)
+		expect(response.body.articles).toBeInstanceOf(Array)
+		expect(response.body.articles.length).toBe(12)
+		expect(response.body.articles).toBeSortedBy('author', { descending: false})
+	})
+	})
+	it('Should be able deal with a malformed request', () => {
+	return request(app)
+	.get('/api/articles?sort_by=author&order=SELECT')
+	.expect(400)
+	})
 })
+
 
 describe('GET /api/articles/:article_id', () => {
 	it('Should return a specific article in response to a GET request at the parametric endpoint', () => {
