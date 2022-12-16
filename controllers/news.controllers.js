@@ -4,10 +4,15 @@ exports.getTopics = (req, res, next) => selectTopics().then((topics) => {
         res.status(200).send({ topics })
     }).catch(next)
 
-exports.getArticles = (req, res, next) => selectArticles().then( (articles) => {
+exports.getArticles = (req, res, next) => {
+	const { topic, sort_by, order } = req.query
+	
+	selectArticles(topic, sort_by, order)
+	.then( (articles) => {
+	console.log(req.query)
 	res.status(200).send({ articles })
 }).catch(next)
-
+}
 exports.getArticle = (req, res, next) => {
 	selectArticle(req.params.article_id)
 	.then( (resArticle) => {res.status(200).send(resArticle)}).catch(next)

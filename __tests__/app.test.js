@@ -52,6 +52,12 @@ describe('GET /api/articles', () => {
 				expect(response.body.articles).toBeSortedBy('created_at', { descending: true})
 			})
 	})
+	it('Should be able to respond to a topic filter and only respond with topics that are the same as the query', () => {
+	return request(app)
+	.get('/api/articles?topic=mitch')
+	.expect(200)
+	
+	})
 })
 
 describe('GET /api/articles/:article_id', () => {
