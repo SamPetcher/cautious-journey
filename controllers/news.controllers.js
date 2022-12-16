@@ -9,7 +9,6 @@ exports.getArticles = (req, res, next) => {
 	
 	selectArticles(topic, sort_by, order)
 	.then( (articles) => {
-	console.log(req.query)
 	res.status(200).send({ articles })
 }).catch(next)
 }

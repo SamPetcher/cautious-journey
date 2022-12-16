@@ -6,7 +6,7 @@ exports.selectTopics = () => {
 }
 exports.selectArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
 	const qVals = [topic, sort_by, order]
-	const allowedTopics = ['owner','title','category','designer','created_at']
+	const allowedSortBy = ['author','title','category','designer','created_at']
 	const allowedSort = ['ASC','DESC']
 	let queryFrag1 = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, CAST(COUNT(comments.article_id) AS INTEGER) AS comment_count FROM articles LEFT JOIN comments ON articles.article_id = comments.article_id` 	
 	const queryFrag2 = `GROUP BY articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes	ORDER BY`	
@@ -14,6 +14,8 @@ exports.selectArticles = (topic, sort_by = 'created_at', order = 'DESC') => {
 	const finalQuery = queryFrag1 + ' ' + queryFrag2 + ' ' + sort_by + ' ' + order + ';'
 	return db.query(finalQuery)
 	.then((response) => {
+	if (!allowedSort.includes(order)) return Promise.reject({status: 400, msg: "No file found",});
+	if (!allowedSortBy.includes(sort_by)) return Promise.reject({status: 400, msg: "No file found",});
 		return response.rows
 	})
 
